@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>youngsheldon.org — Full Page</title>
   <style>
-    /* Page reset */
     :root{
       --banner-height: 72px;
       --banner-bg: rgba(0,0,0,0.45);
@@ -15,7 +14,6 @@
     * { box-sizing: border-box; }
     html,body { height:100%; margin:0; font-family: "Comic Sans MS", "Comic Sans", "ComicNeue", system-ui, -apple-system, "Segoe UI", Roboto, Arial; }
 
-    /* Full-screen background image */
     .bg {
       position:fixed;
       inset:0;
@@ -27,7 +25,6 @@
       transform: translateZ(0);
     }
 
-    /* Top banner */
     header.banner {
       position: fixed;
       top: 0;
@@ -45,7 +42,6 @@
       box-shadow: 0 6px 18px rgba(0,0,0,0.25);
     }
 
-    /* Container for the animated text */
     .title {
       display: inline-flex;
       gap: 0.12rem;
@@ -58,14 +54,12 @@
       user-select: none;
     }
 
-    /* Each letter is a span we animate */
     .title .char {
       display: inline-block;
       transform-origin: 50% 50%;
       animation: wave 1200ms ease-in-out infinite;
     }
 
-    /* Staggered delays applied via inline style from JS (or you can hardcode delays) */
     @keyframes wave {
       0%   { transform: translateY(0) rotate(0deg) scale(1); }
       25%  { transform: translateY(-8px) rotate(-2deg) scale(1.03); }
@@ -74,21 +68,17 @@
       100% { transform: translateY(0) rotate(0deg) scale(1); }
     }
 
-    /* Make sure banner text is readable on small screens */
     @media (max-width:600px){
       :root { --banner-height: 56px; --text-size: 20px; }
       .title { letter-spacing: 0.01em; }
     }
 
-    /* Respect reduced motion preference */
     @media (prefers-reduced-motion: reduce) {
       .title .char { animation: none; transform: none !important; }
     }
 
-    /* A subtle bottom spacer so content doesn't sit under banner if content added later */
     main { padding-top: var(--banner-height); z-index: 1; position: relative; }
 
-    /* Optional small clickable hotspot (in case you want the banner to link) */
     .title a { color: inherit; text-decoration: none; display:inline-block; padding: 6px 10px; border-radius: 6px; }
     .title a:focus { outline: 3px solid rgba(255,255,255,0.18); outline-offset: 3px; }
   </style>
@@ -98,55 +88,43 @@
 
   <header class="banner" role="banner" aria-hidden="false">
     <nav aria-label="Primary">
-      <!-- We'll place each character into a span so they can animate with staggered delays. -->
       <div class="title" id="animatedTitle" aria-live="polite">
-        <!-- JS will populate letters here for precise staggering -->
       </div>
     </nav>
   </header>
 
   <main role="main" aria-hidden="true">
-    <!-- Empty main — the page is the image. -->
   </main>
 
   <script>
-    // Text to display
     const text = "youngsheldon.org";
 
-    // Build spans for each character and apply staggered animation delays
     const container = document.getElementById('animatedTitle');
 
-    // Wrap in a link element (optional) — remove <a> if you don't want it clickable
     const link = document.createElement('a');
     link.href = "#";
     link.setAttribute('aria-label', text + " (site)");
-    link.addEventListener('click', (e) => e.preventDefault()); // prevent navigation by default
+    link.addEventListener('click', (e) => e.preventDefault());
     container.appendChild(link);
 
-    // Create spans with staggered delays (creates a smooth wave)
-    const baseDelay = 0; // seconds
-    const stagger = 0.08; // seconds between letters
+    
+    const baseDelay = 0;
+    const stagger = 0.08; 
 
     for (let i = 0; i < text.length; i++) {
       const ch = text[i];
       const span = document.createElement('span');
       span.className = 'char';
-      // preserve spaces visually
       span.textContent = ch === ' ' ? '\u00A0' : ch;
-      // make every letter's animation offset slightly
       const delay = (i * stagger + baseDelay).toFixed(3) + 's';
       span.style.animationDelay = delay;
-      // Slightly vary animation duration per character for a lively feel (optional)
-      // span.style.animationDuration = (1.05 + (i % 3) * 0.05) + 's';
       link.appendChild(span);
     }
 
-    // Accessibility: announce once when the page loads
     window.addEventListener('load', () => {
-      // If user prefers reduced motion, skip announcements
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      // Briefly set aria-live to polite (already set) — nothing else required
     });
   </script>
 </body>
 </html>
+
